@@ -9,6 +9,7 @@ token_t* init_token(int type) {
 
     return token;
 }
+
 char* token_type_to_string(int type) {
     switch (type) {
         case TOKEN_INCREMENT:

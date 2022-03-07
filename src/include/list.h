@@ -13,6 +13,6 @@ list_t* init_list(size_t item_size);
 
 void list_push(list_t* list, void* item);
 
-void* list_get(list_t* list, size_t index);
+void* list_pop(list_t* list);
 
 #endif //BF2C_LIST_H

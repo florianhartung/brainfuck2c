@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "include/list.h"
 
 list_t* init_list(size_t item_size) {
@@ -21,6 +23,14 @@ void list_push(list_t* list, void* item) {
     list->items[list->size - 1ULL] = item;
 }
 
-void* list_get(list_t* list, size_t index) {
-    return list->items[index];
+void* list_pop(list_t* list) {
+    if (list->size == 0) {
+        fprintf(stderr, "Could not pop item from list, size is 0");
+        exit(1);
+    }
+    list->size -= 1;
+    void* popped_item = list->items[list->size];
+    void** new_items = realloc(list->items, (list->size * list->item_size));
+    list->items = new_items;
+    return popped_item;
 }

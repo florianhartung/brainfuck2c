@@ -1,22 +1,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "include/AST.h"
+#include "include/ast.h"
 #include "include/string_builder.h"
 
-AST_t* init_AST(int type) {
-    AST_t* ast = calloc(1, sizeof(AST_t));
+ast_t* init_ast(int type) {
+    ast_t* ast = calloc(1, sizeof(ast_t));
     ast->type = type;
 
     if (type == AST_COMPOUND || type == AST_LOOP) {
-        ast->children = init_list(sizeof(AST_t*));
+        ast->children = init_list(sizeof(ast_t*));
     }
 
     return ast;
 }
 
-char* AST_type_to_string(AST_t* ast) {
-    switch (ast->type) {
+char* ast_type_to_string(int type) {
+    switch (type) {
         case AST_COMPOUND:
             return "AST_COMPOUND";
         case AST_INCREMENT:
@@ -35,23 +35,25 @@ char* AST_type_to_string(AST_t* ast) {
             return "AST_LOOP";
         case AST_NOOP:
             return "AST_NOOP";
+        default:
+            return "UNKNOWN_TYPE";
     }
 }
 
-char* AST_to_string(AST_t* ast) {
-    char* template = "<AST type='%s', type_int=%d, children=[%s]'>";
-    char* type_str = AST_type_to_string(ast);
+char* ast_to_string(ast_t* ast) {
+    char* template = "<AST type='%s', type_int=%d, children=[%s]>";
+    char* type_str = ast_type_to_string(ast->type);
 
     char* children;
     if (ast->children) {
         string_builder_t* children_string_builder = init_string_builder();
         for (int i = 0; i < ast->children->size; ++i) {
-            AST_t* child = list_get(ast->children, i);
-            char* child_str = AST_to_string(child);
-            size_t child_str_length = strlen(child_str);
             if (i) {
                 string_builder_append(children_string_builder, ',');
             }
+            ast_t* child = ((ast_t**) ast->children->items)[i];
+            char* child_str = ast_to_string(child);
+            size_t child_str_length = strlen(child_str);
             for (int j = 0; j < child_str_length; j++) {
                 string_builder_append(children_string_builder, child_str[j]);
             }

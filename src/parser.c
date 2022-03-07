@@ -24,14 +24,14 @@ void parser_expect(parser_t* parser, int type) {
     parser_advance(parser);
 }
 
-AST_t* parser_parse(parser_t* parser) {
+ast_t* parser_parse(parser_t* parser) {
     return parser_parse_compound(parser);
 }
 
-AST_t* parser_parse_loop(parser_t* parser) {
+ast_t* parser_parse_loop(parser_t* parser) {
     parser_expect(parser, TOKEN_LOOP_START);
 
-    AST_t* loop_compound = init_AST(AST_LOOP);
+    ast_t* loop_compound = init_ast(AST_LOOP);
 
     while (parser->token->type != TOKEN_LOOP_END) {
         if (parser->token->type == TOKEN_EOF) {
@@ -46,26 +46,26 @@ AST_t* parser_parse_loop(parser_t* parser) {
     return loop_compound;
 }
 
-AST_t* parser_parse_token(parser_t* parser) {
+ast_t* parser_parse_token(parser_t* parser) {
     switch (parser->token->type) {
         case TOKEN_INCREMENT:
             parser_expect(parser, TOKEN_INCREMENT);
-            return init_AST(AST_INCREMENT);
+            return init_ast(AST_INCREMENT);
         case TOKEN_DECREMENT:
             parser_expect(parser, TOKEN_DECREMENT);
-            return init_AST(AST_DECREMENT);
+            return init_ast(AST_DECREMENT);
         case TOKEN_RIGHT:
             parser_expect(parser, TOKEN_RIGHT);
-            return init_AST(AST_RIGHT);
+            return init_ast(AST_RIGHT);
         case TOKEN_LEFT:
             parser_expect(parser, TOKEN_LEFT);
-            return init_AST(AST_LEFT);
+            return init_ast(AST_LEFT);
         case TOKEN_OUTPUT:
             parser_expect(parser, TOKEN_OUTPUT);
-            return init_AST(AST_OUTPUT);
+            return init_ast(AST_OUTPUT);
         case TOKEN_INPUT:
             parser_expect(parser, TOKEN_INPUT);
-            return init_AST(AST_INPUT);
+            return init_ast(AST_INPUT);
         case TOKEN_LOOP_START:
             return parser_parse_loop(parser);
         case TOKEN_LOOP_END:
@@ -77,8 +77,8 @@ AST_t* parser_parse_token(parser_t* parser) {
     }
 }
 
-AST_t* parser_parse_compound(parser_t* parser) {
-    AST_t* compound = init_AST(AST_COMPOUND);
+ast_t* parser_parse_compound(parser_t* parser) {
+    ast_t* compound = init_ast(AST_COMPOUND);
 
     while (parser->token->type != TOKEN_EOF) {
         list_push(compound->children, parser_parse_token(parser));
